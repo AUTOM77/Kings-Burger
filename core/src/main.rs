@@ -13,5 +13,5 @@ fn main() {
     let cli = Cli::parse();
     let (_addr, _promo) = (cli.addr, cli.promo);
 
-    println!("{:?}", _promo);
+    println!("sub={:?}", _promo);
 }
