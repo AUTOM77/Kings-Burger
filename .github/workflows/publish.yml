@@ -1,0 +1,61 @@
+name: publish
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  CARGO_TERM_COLOR: always
+
+permissions:
+  contents: write
+
+on:
+  workflow_dispatch:
+    inputs:
+      addr:
+        description: addr
+        required: true
+        type: string
+        default: "0"
+      core:
+        description: core
+        required: true
+        type: number
+        default: 0
+
+jobs:
+  get:
+    runs-on: "ubuntu-latest"
+    outputs:
+          sub: ${{ steps.get.outputs.sub }}
+    steps:
+      - 
+        name: Checkout
+        uses: actions/checkout@v3
+
+      - 
+        name: Install Rust
+        uses: actions-rs/toolchain@v1.0.6
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+      - 
+        name: Build only
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --release
+
+      - 
+        name: Get
+        id: get
+        shell: bash
+        run: |
+          ./target/release/core -a ${{ inputs.addr }} -p ${{ inputs.core }} >> $GITHUB_OUTPUT
+
+  test:
+    needs:
+      - get
+    uses: ./.github/workflows/push-tag.yml
+    with:
+      core: ${{ inputs.core }}
+      sub: ${{ needs.get.outputs.sub }}

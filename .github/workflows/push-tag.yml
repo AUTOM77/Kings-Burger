@@ -1,0 +1,33 @@
+name: dev
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  CARGO_TERM_COLOR: always
+
+permissions:
+  contents: write
+
+on:
+  workflow_call:
+    inputs:
+      core:
+        default: '0'
+        required: true
+        type: string
+      sub:
+        default: '0'
+        required: true
+        type: string
+
+jobs:
+  pre-release:
+    runs-on: ubuntu-latest
+    steps:
+      - 
+        name: Checkout
+        uses: actions/checkout@v3
+      - 
+        name: Release
+        shell: bash
+        run: |
+          git tag v${{ inputs.core }}.${{ inputs.sub }} && git push --tags
