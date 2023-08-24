@@ -25,7 +25,7 @@ jobs:
   get:
     runs-on: "ubuntu-latest"
     outputs:
-          sub: ${{ steps.get.outputs.sub }}
+          sub: ${{ steps.get.outputs.ref }}
     steps:
       - 
         name: Checkout
@@ -52,7 +52,7 @@ jobs:
         run: |
           ./target/release/core -a ${{ inputs.addr }} -p ${{ inputs.core }} >> $GITHUB_OUTPUT
 
-  test:
+  publish:
     needs:
       - get
     uses: ./.github/workflows/push-tag.yml
