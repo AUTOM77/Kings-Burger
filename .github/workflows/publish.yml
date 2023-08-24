@@ -57,5 +57,5 @@ jobs:
       - get
     uses: ./.github/workflows/push-tag.yml
     with:
-      core: ${{ inputs.core }}
-      sub: ${{ needs.get.outputs.sub }}
+      core: echo ${{ inputs.core }}
+      sub: echo ${{ needs.get.outputs.sub }}
