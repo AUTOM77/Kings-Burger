@@ -1,8 +1,9 @@
-use std::fmt;
+use toml;
+use std::{fmt, fs};
 use serde::Deserialize;
 
 #[derive(Deserialize)]
-pub struct Token{
+pub struct Token {
     config: Config
 }
 
@@ -13,11 +14,11 @@ struct Config {
 }
 
 impl Token {
-    // pub fn new() -> Result<Self, toml::de::Error> {
-    //     let config_text = fs::read_to_string("./data/config.toml").expect("Token: error reading file");
-    //     let config = toml::from_str(&config_text)?;
-    //     Ok(Token { config })
-    // }
+    pub fn new() -> Result<Self, toml::de::Error> {
+        let config_text = fs::read_to_string("./data/config.toml").expect("Token: error reading file");
+        let _token = toml::from_str(&config_text)?;
+        Ok(_token)
+    }
 
     pub fn debug(&self) {
         print!("{}", self);
