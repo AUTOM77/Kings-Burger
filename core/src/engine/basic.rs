@@ -1,13 +1,13 @@
 use std::fmt;
 
 #[derive(Clone, Debug)]
-pub struct Task{
+pub struct Task {
     addr: String,
-    promo: String
+    promo: String,
 }
 
 impl Task {
-    pub fn new(addr:String, promo: String) -> Self {
+    pub fn new(addr: String, promo: String) -> Self {
         Self { addr, promo }
     }
 
@@ -19,13 +19,13 @@ impl Task {
         self.promo.clone()
     }
 
-    pub fn run(&self) {
+    pub fn debug(&self) {
         print!("{}", self);
     }
 }
 
 impl fmt::Display for Task {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "ref={}", self.promo)
     }
 }
