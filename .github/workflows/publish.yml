@@ -50,7 +50,7 @@ jobs:
         id: get
         shell: bash
         run: |
-          ./target/release/core -a ${{ inputs.addr }} -p ${{ inputs.core }} >> $GITHUB_OUTPUT
+          ./target/release/cli post ${{ inputs.addr }} ${{ inputs.core }} >> $GITHUB_OUTPUT
 
   publish:
     needs:

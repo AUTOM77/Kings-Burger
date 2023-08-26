@@ -1,8 +1,15 @@
 [package]
 name = "core"
-author = "monius <alpha.3olf@gmail.com>"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
 clap = { version= "4.4.0", features=["derive"] }
+
+[lib]
+name = "kings"
+path = "src/lib.rs"
+
+[[bin]]
+name = "cli"
+path = "src/cli.rs"
