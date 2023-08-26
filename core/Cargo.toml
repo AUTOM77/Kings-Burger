@@ -7,7 +7,7 @@ edition = "2021"
 clap = { version= "4.4.0", features=["derive"] }
 
 [lib]
-name = "kings"
+name = "core"
 path = "src/lib.rs"
 
 [[bin]]

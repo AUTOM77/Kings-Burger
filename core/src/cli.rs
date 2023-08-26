@@ -1,4 +1,5 @@
 use clap::{Parser, Subcommand};
+use core::Task;
 
 #[derive(Parser)]
 #[command(author, version)]
@@ -18,7 +19,7 @@ enum Kings {
 fn main() -> std::io::Result<()>{
     let cli = Cli::parse();
     match cli.args {
-        Kings::Post { addr, promo } => println!("ref={:?}", promo)
+        Kings::Post { addr, promo } => Task::new(addr, promo).run(),
     }
     Ok(())
 }
