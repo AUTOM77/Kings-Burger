@@ -15,3 +15,5 @@ Cargo.lock
 
 # For fucking macos dev
 .DS_Store
+
+.py
