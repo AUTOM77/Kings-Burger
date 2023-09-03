@@ -3,23 +3,23 @@ use ring::{aead, error};
 // const KEY: &[u8] = b"Q0U1Q0FGRjgzRDQ2NDcxMzkwOThFNjI1RjU1NjA4MDg=";
 const NONCE: &[u8] = b"511520511520";
 
-#[warn(dead_code)]
-pub fn encode(raw: &str, key: &[u8]) -> String{
-    let mut cipher_vec = String::from(raw).as_bytes().to_vec();
+// #[warn(dead_code)]
+// pub fn encode(raw: &str, key: &[u8]) -> String{
+//     let mut cipher_vec = String::from(raw).as_bytes().to_vec();
 
-    let mut _o0_key: aead::SealingKey<OneNonceSequence> = make_key(
-        &aead::CHACHA20_POLY1305,
-        key,
-        aead::Nonce::try_assume_unique_for_key(&NONCE).unwrap(),
-    );
+//     let mut _o0_key: aead::SealingKey<OneNonceSequence> = make_key(
+//         &aead::CHACHA20_POLY1305,
+//         key,
+//         aead::Nonce::try_assume_unique_for_key(&NONCE).unwrap(),
+//     );
 
-    _o0_key.seal_in_place_append_tag(aead::Aad::empty(), &mut cipher_vec).unwrap();
+//     _o0_key.seal_in_place_append_tag(aead::Aad::empty(), &mut cipher_vec).unwrap();
 
-    let res:String = cipher_vec.iter()
-        .map(|c| format!("-{}", c))
-        .collect();
-    format!("0o://{}", &res[1..res.len()])
-}
+//     let res:String = cipher_vec.iter()
+//         .map(|c| format!("-{}", c))
+//         .collect();
+//     format!("0o://{}", &res[1..res.len()])
+// }
 
 pub fn decode(raw: &str, key: &[u8]) -> String{
     let mut cipher_vec: Vec<u8> = String::from(raw)

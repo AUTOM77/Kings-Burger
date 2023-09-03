@@ -10,7 +10,9 @@ pub struct Config {
 #[derive(Deserialize)]
 struct Token {
     conn: String,
+    frame: String,
     data: Vec<Vec<String>>,
+    roll: Vec<String>,
 }
 
 impl Config {
@@ -24,8 +26,16 @@ impl Config {
         &self.token.conn
     }
 
+    pub fn frame(&self) -> &str {
+        &self.token.frame
+    }
+
     pub fn get_data(&self) -> &Vec<Vec<String>> {
         &self.token.data
+    }
+    
+    pub fn get_roll(&self) -> &Vec<String> {
+        &self.token.roll
     }
 
     pub fn debug(&self) {
@@ -41,10 +51,6 @@ impl fmt::Display for Config {
             write!(f, "\t data: {:?}\n", d)?;
         }
         write!(f, "}}\n")?;
-        // write!(f, "Drive {{\n")?;
-        // write!(f, "\tengine: {}\n", self.driver.as_ref().unwrap().engine)?;
-        // write!(f, "\tconn: {}\n", self.driver.as_ref().unwrap().conn)?;
-        // write!(f, "}}\n")?;
         Ok(())
     }
 }
