@@ -1,16 +1,14 @@
-[config]
-id = 1
+[token]
+conn = "http://127.0.0.1:9515"
 data = [
     ["QID5-1"], 
     ["QID7-4"], 
     ["QID10-2"], 
     ["QID60-1-2-col", "QID60-2-2-col", "QID60-3-2-col"],
-    ["QID62-1-2-col", "QID62-2-2-col"],
+    ["QID62-1-2-col", "QID62-4-2-col"],
     ["QID63-2", "QID64-2"],
     ["QID30-2"],
     ["QID36-2"],
     ["QID71-1"],
     ["QID38-390"],
-    ["QR~QID45"]
 ]
-

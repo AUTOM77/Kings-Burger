@@ -1,30 +1,26 @@
 use clap::{Parser, Subcommand};
-use core::{Task, Token};
 
 #[derive(Parser)]
 #[command(author, version)]
 struct Cli {
     #[command(subcommand)]
-    args: Kings,
+    args: Kings
 }
 
 #[derive(Subcommand)]
 enum Kings {
     Post {
         addr: String,
-        promo: String,
-    },
+        key: String,
+        #[clap(default_value="")]
+        value: String,
+    }
 }
 
-fn main() -> std::io::Result<()>{
+#[tokio::main]
+async fn main() {
     let cli = Cli::parse();
-
-    let _token = Token::new();
-    _token.unwrap().debug();
-
-    match cli.args {
-        Kings::Post { addr, promo } => Task::new(addr, promo).debug(),
-    }
-    
-    Ok(())
+    let _ = match cli.args {
+        Kings::Post { addr, key, value } => core::run(addr, key, value).await,
+    };
 }
