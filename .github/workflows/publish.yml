@@ -23,7 +23,7 @@ on:
         default: 0
 
 jobs:
-  get:
+  post:
     runs-on: "ubuntu-latest"
     outputs:
           ref: ${{ steps.get.outputs.ref }}
@@ -55,7 +55,7 @@ jobs:
         shell: bash
         run: |
           chromedriver --port=9515 &
-          sleep 30
+          sleep 100
           ./target/release/cli post ${{ inputs.addr }} ${{ inputs.core }} >> $GITHUB_OUTPUT
 
   publish:

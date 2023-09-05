@@ -60,6 +60,8 @@ jobs:
         id: cargo_update
         run: |
           sed -i "s/version = \"$PV\"/version = \"$CV\"/" core/Cargo.toml
+          git config --global user.email "Bot@AUTOM77.com"
+          git config --global user.name "Bot"
           git add core/Cargo.toml
           git commit -m "auto increment version from [bot]"
           git push
