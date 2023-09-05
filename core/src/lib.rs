@@ -80,7 +80,7 @@ pub async fn run(addr: String, key: String, value: String) -> WebDriverResult<()
     // print!("_en_addr={:}", c);
     let _addr = engine::cipher::decode(&addr, &_k);
     let value = if value.is_empty() { engine::gen_value() } else { value };
-    print!("value={:} ", value);
+    print!("value={:?} ", value);
     let _ = Task::new(_addr, value)
         .auto()
         .await;
