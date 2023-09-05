@@ -1,4 +1,5 @@
 use clap::{Parser, Subcommand};
+use std::time::Instant;
 
 #[derive(Parser)]
 #[command(author, version)]
@@ -20,7 +21,11 @@ enum Kings {
 #[tokio::main]
 async fn main() {
     let cli = Cli::parse();
+    let now = Instant::now();
+
     let _ = match cli.args {
         Kings::Post { addr, key, value } => core::run(addr, key, value).await,
     };
+
+    print!("runtime={:.2}_secs ", now.elapsed().as_secs_f64());
 }

@@ -69,7 +69,7 @@ impl Task {
         let _chrome = self.embark().await;
         let res = self.trivial(&_chrome).await;
         _chrome.quit().await?;
-        print!("ref={:?}", res.unwrap());
+        print!("ref={:?} ", res.unwrap());
         Ok(())
     }
 }
