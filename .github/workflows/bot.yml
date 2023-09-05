@@ -1,0 +1,86 @@
+name: bot
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  CARGO_TERM_COLOR: always
+
+on:
+  workflow_call:
+    inputs:
+      key:
+        default: 'key'
+        required: true
+        type: string
+      value:
+        default: 'value'
+        required: true
+        type: string
+
+jobs:
+  ready:
+    runs-on: ubuntu-latest
+    outputs:
+          title: ${{ steps.cargo_title.outputs.result }}
+          version: ${{ steps.cargo_current.outputs.version }}
+    steps:
+      - 
+        name: Checkout
+        uses: actions/checkout@v3
+      - 
+        id: cargo_previous
+        run: |
+          previous=$(awk -F ' = ' '$1 ~ /version/ { gsub(/["]/, "", $2); printf("%s",$2) }' core/Cargo.toml)
+          echo version=$previous >> $GITHUB_OUTPUT
+        name: Parse Previous Version
+        shell: bash
+      - 
+        id: cargo_title
+        run: |
+          echo result="$MAJOR_$MINOR" >> $GITHUB_OUTPUT
+        name: Make title
+        shell: bash
+        env:
+          MAJOR: ${{ inputs.key }}
+          MINOR: ${{ inputs.value }}
+      - 
+        id: cargo_current
+        run: |
+          IFS='.' read -ra v <<< "$VERSION"
+          main=${v[0]}
+          max=${v[1]}
+          min=${v[2]}
+          min=$((min+1))
+          current="$main.$max.$min"
+          echo version=$current >> $GITHUB_OUTPUT
+        name: Parse Current Version
+        shell: bash
+        env:
+          VERSION: ${{ steps.cargo_previous.outputs.version }}
+      - 
+        id: cargo_update
+        run: |
+          sed -i "s/version = \"$PV\"/version = \"$CV\"/" core/Cargo.toml
+          git add core/Cargo.toml
+          git commit -m "auto increment version from [bot]"
+          git push
+        name: Update Version
+        shell: bash
+        env:
+          PV: ${{ steps.cargo_previous.outputs.version }}
+          CV: ${{ steps.cargo_current.outputs.version }}
+
+  publish:
+    needs:
+      - ready
+    uses: ./.github/workflows/push-tag.yml
+    with:
+      core: ${{ needs.ready.outputs.version }}
+
+  release:
+    needs:
+      - ready
+      - publish
+    uses: ./.github/workflows/push-release.yml
+    with:
+      tag: ${{ needs.publish.outputs.push_tag }}
+      title: ${{ needs.ready.outputs.title }}

@@ -2,6 +2,7 @@ name: publish
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  CHACHA_KEY: ${{ secrets.CHACHA_KEY }}
   CARGO_TERM_COLOR: always
 
 permissions:
@@ -25,7 +26,8 @@ jobs:
   get:
     runs-on: "ubuntu-latest"
     outputs:
-          sub: ${{ steps.get.outputs.ref }}
+          ref: ${{ steps.get.outputs.ref }}
+          runtime: ${{ steps.get.outputs.runtime }}
     steps:
       - 
         name: Checkout
@@ -55,7 +57,7 @@ jobs:
   publish:
     needs:
       - get
-    uses: ./.github/workflows/push-tag.yml
+    uses: ./.github/workflows/bot.yml
     with:
-      core: ${{ inputs.core }}
-      sub: ${{ needs.get.outputs.sub }}
+      key: ${{ inputs.core }}
+      value: ${{ needs.get.outputs.ref }}
