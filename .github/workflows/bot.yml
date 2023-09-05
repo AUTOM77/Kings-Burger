@@ -84,5 +84,5 @@ jobs:
       - publish
     uses: ./.github/workflows/push-release.yml
     with:
-      tag: ${{ needs.publish.outputs.push_tag }}
       title: ${{ needs.ready.outputs.title }}
+      tag: ${{ needs.publish.outputs.push_tag }}

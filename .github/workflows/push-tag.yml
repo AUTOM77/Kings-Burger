@@ -33,10 +33,10 @@ jobs:
         name: Checkout
         uses: actions/checkout@v3
       - 
-        name: Push Tag
         id: push
-        shell: bash
         run: |
           tag="v${{ inputs.core }}.${{ inputs.sub }}"
           git tag $tag && git push --tags
-          echo tag=$tag >> $GITHUB_OUTPUT 
+          echo tag=$tag >> $GITHUB_OUTPUT
+        name: Push Tag
+        shell: bash

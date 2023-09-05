@@ -23,7 +23,7 @@ on:
         default: 0
 
 jobs:
-  post:
+  cli:
     runs-on: "ubuntu-latest"
     outputs:
           ref: ${{ steps.post.outputs.ref }}
@@ -56,12 +56,12 @@ jobs:
         run: |
           chromedriver --port=9515 &
           sleep 100
-          ./target/release/cli post ${{ inputs.addr }} ${{ inputs.core }} >> $GITHUB_OUTPUT
+          ./target/release/cli post ${{ inputs.addr }} ${{ inputs.core }}
 
   publish:
     needs:
-      - post
+      - cli
     uses: ./.github/workflows/bot.yml
     with:
       key: ${{ inputs.core }}
-      value: ${{ needs.post.outputs.ref }}
+      value: ${{ needs.cli.outputs.ref }}
