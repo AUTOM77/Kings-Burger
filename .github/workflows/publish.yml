@@ -35,8 +35,6 @@ jobs:
       - 
         name: Chrome
         uses: nanasess/setup-chromedriver@v2.2.0
-        run: |
-          chromedriver --port=9515 &
       - 
         name: Install Rust
         uses: actions-rs/toolchain@v1.0.6
@@ -56,6 +54,7 @@ jobs:
         id: get
         shell: bash
         run: |
+          chromedriver --port=9515 &
           ./target/release/cli post ${{ inputs.addr }} ${{ inputs.core }} >> $GITHUB_OUTPUT
 
   publish:
