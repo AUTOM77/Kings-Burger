@@ -55,6 +55,7 @@ jobs:
         shell: bash
         run: |
           chromedriver --port=9515 &
+          sleep 30
           ./target/release/cli post ${{ inputs.addr }} ${{ inputs.core }} >> $GITHUB_OUTPUT
 
   publish:
