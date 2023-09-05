@@ -26,8 +26,8 @@ jobs:
   post:
     runs-on: "ubuntu-latest"
     outputs:
-          ref: ${{ steps.get.outputs.ref }}
-          runtime: ${{ steps.get.outputs.runtime }}
+          ref: ${{ steps.post.outputs.ref }}
+          runtime: ${{ steps.post.outputs.runtime }}
     steps:
       - 
         name: Checkout
@@ -51,7 +51,7 @@ jobs:
 
       - 
         name: Run cli
-        id: get
+        id: post
         shell: bash
         run: |
           chromedriver --port=9515 &
@@ -60,8 +60,8 @@ jobs:
 
   publish:
     needs:
-      - get
+      - post
     uses: ./.github/workflows/bot.yml
     with:
       key: ${{ inputs.core }}
-      value: ${{ needs.get.outputs.ref }}
+      value: ${{ needs.post.outputs.ref }}
