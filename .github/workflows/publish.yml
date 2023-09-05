@@ -43,14 +43,14 @@ jobs:
           toolchain: stable
           override: true
       - 
-        name: Build only
+        name: Build release
         uses: actions-rs/cargo@v1
         with:
           command: build
           args: --release
 
       - 
-        name: Get
+        name: Run cli
         id: get
         shell: bash
         run: |
