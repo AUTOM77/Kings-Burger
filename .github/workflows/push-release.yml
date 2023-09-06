@@ -29,5 +29,5 @@ jobs:
       - 
         name: Release
         run: |
-          gh release create ${{ inputs.title }} -t ${{ inputs.push_tag }}
+          gh release create ${{ inputs.push_tag }} --notes "Hash-tag: ${{ inputs.title }}"
         shell: bash

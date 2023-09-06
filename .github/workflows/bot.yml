@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
           title: ${{ steps.cargo_title.outputs.result }}
-          version: ${{ steps.cargo_current.outputs.version }}
+          version: ${{ steps.cargo_previous.outputs.version }}
     steps:
       - 
         name: Checkout
