@@ -1,4 +1,4 @@
-# Kings-Burger
+# KingsBur
 
 ## Usage
 
@@ -9,6 +9,7 @@ cli post $url $key $value
 ## Features
 
 - Chromium driver `headless` support
+- Shadow content js eval in `thirtyfour`
 - CHACHA20_POLY1305 `cipher` encoder/decoder support
 - Random pattern generator
 - `toml` config file parser
