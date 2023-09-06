@@ -40,7 +40,6 @@ jobs:
         name: Make title
         shell: bash
         env:
-        "v${{ inputs.core }}"
           MAJOR: ${{ inputs.key }}
           MINOR: ${{ inputs.value }}
       - 
