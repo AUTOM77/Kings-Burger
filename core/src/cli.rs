@@ -24,7 +24,6 @@ async fn main() {
     let cli = Cli::parse();
     let now = Instant::now();
 
-    println!("{{");
     let key = env::var("CHACHA_KEY").unwrap();
     let _ = match cli.args {
         // Kings::Post { addr, key, value } => core::run(addr, key, value).await,
@@ -32,5 +31,4 @@ async fn main() {
     };
 
     println!("runtime={:.2}_secs", now.elapsed().as_secs_f64());
-    println!("}}");
 }

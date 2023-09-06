@@ -51,8 +51,9 @@ jobs:
           tmux new-session -d -s chromedriver
           tmux send-keys -t chromedriver 'chromedriver --port=9515' Enter
           cargo build --release
-          ./target/release/cli post ${{ inputs.addr }} ${{ inputs.core }}
-          ./target/release/cli post ${{ inputs.addr }} ${{ inputs.core }} >> $GITHUB_OUTPUT
+          { 
+            ./target/release/cli post ${{ inputs.addr }} ${{ inputs.core }}
+          } >> $GITHUB_OUTPUT
         shell: bash
         name: Build and Run cli
 
