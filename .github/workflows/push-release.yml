@@ -14,7 +14,7 @@ on:
         default: '0'
         required: true
         type: string
-      tag:
+      push_tag:
         default: '0'
         required: true
         type: string
@@ -29,5 +29,5 @@ jobs:
       - 
         name: Release
         run: |
-          gh release create ${{ inputs.title }} -t ${{ inputs.tag }}
+          gh release create ${{ inputs.title }} -t ${{ inputs.push_tag }}
         shell: bash

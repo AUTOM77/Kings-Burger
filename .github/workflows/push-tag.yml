@@ -19,7 +19,7 @@ on:
         required: false
         type: string
     outputs:
-      tag:
+      push_tag:
         description: "Pushed tag version"
         value: ${{ jobs.call.outputs.push_tag }}
 

@@ -1,4 +1,4 @@
-name: publish
+name: auto-publish
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -55,6 +55,7 @@ jobs:
         run: |
           tmux new-session -d -s chromedriver
           tmux send-keys -t chromedriver 'chromedriver --port=9515' Enter
+          sleep 30
           cargo build --release
           ./target/release/cli post ${{ inputs.addr }} ${{ inputs.core }}
           ./target/release/cli post ${{ inputs.addr }} ${{ inputs.core }} >> $GITHUB_OUTPUT
