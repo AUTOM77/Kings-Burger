@@ -26,6 +26,7 @@ jobs:
   cli:
     runs-on: "ubuntu-latest"
     outputs:
+          value: ${{ steps.post.outputs.value }}
           ref: ${{ steps.post.outputs.ref }}
           runtime: ${{ steps.post.outputs.runtime }}
     steps:

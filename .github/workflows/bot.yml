@@ -36,10 +36,11 @@ jobs:
       - 
         id: cargo_title
         run: |
-          echo result="$MAJOR_$MINOR" >> $GITHUB_OUTPUT
+          echo result="${MAJOR}_${MINOR}" >> $GITHUB_OUTPUT
         name: Make title
         shell: bash
         env:
+        "v${{ inputs.core }}"
           MAJOR: ${{ inputs.key }}
           MINOR: ${{ inputs.value }}
       - 
