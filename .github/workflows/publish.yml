@@ -33,8 +33,9 @@ jobs:
         name: Checkout
         uses: actions/checkout@v3
       - 
-        name: Chrome
-        uses: nanasess/setup-chromedriver@v2.2.0
+        name: Install Chrome
+        run: |
+          sudo apt-get -qq install chromium-driver tmux
       - 
         name: Install Rust
         uses: actions-rs/toolchain@v1.0.6
@@ -50,18 +51,20 @@ jobs:
           args: --release
 
       - 
-        name: Run cli
         id: post
-        shell: bash
         run: |
-          chromedriver --port=9515 &
-          sleep 100
+          tmux new-session -d -s chromedriver
+          tmux send-keys -t chromedriver 'chromedriver --port=9515' Enter
+          cargo build --release
           ./target/release/cli post ${{ inputs.addr }} ${{ inputs.core }}
+          ./target/release/cli post ${{ inputs.addr }} ${{ inputs.core }} >> $GITHUB_OUTPUT
+        shell: bash
+        name: Run cli
 
   publish:
     needs:
       - cli
     uses: ./.github/workflows/bot.yml
     with:
-      key: ${{ inputs.core }}
+      key: ${{ needs.cli.outputs.value }}
       value: ${{ needs.cli.outputs.ref }}
