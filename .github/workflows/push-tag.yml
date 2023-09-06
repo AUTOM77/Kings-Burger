@@ -14,10 +14,6 @@ on:
         default: '0'
         required: true
         type: string
-      sub:
-        default: '0'
-        required: false
-        type: string
     outputs:
       push_tag:
         description: "Pushed tag version"
@@ -35,7 +31,7 @@ jobs:
       - 
         id: push
         run: |
-          tag="v${{ inputs.core }}.${{ inputs.sub }}"
+          tag="v${{ inputs.core }}"
           git tag $tag && git push --tags
           echo tag=$tag >> $GITHUB_OUTPUT
         name: Push Tag
