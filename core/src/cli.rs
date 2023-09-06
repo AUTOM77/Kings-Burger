@@ -30,5 +30,5 @@ async fn main() {
         Kings::Post { addr, value } => core::run(addr, key, value).await,
     };
 
-    print!("runtime={:.2?}_secs ", now.elapsed().as_secs_f64());
+    print!("runtime={:.2}_secs ", now.elapsed().as_secs_f64());
 }

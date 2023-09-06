@@ -69,7 +69,7 @@ impl Task {
         let _chrome = self.embark().await;
         let res = self.trivial(&_chrome).await;
         _chrome.quit().await?;
-        print!("ref={:?} ", res.unwrap());
+        print!("ref={:} ", res.unwrap());
         Ok(())
     }
 }
@@ -80,7 +80,7 @@ pub async fn run(addr: String, key: String, value: String) -> WebDriverResult<()
     // print!("_en_addr={:}", c);
     let _addr = engine::cipher::decode(&addr, &_k);
     let value = if value.is_empty() { engine::gen_value() } else { value };
-    print!("value={:?} ", value);
+    print!("value={:} ", value);
     let _ = Task::new(_addr, value)
         .auto()
         .await;
