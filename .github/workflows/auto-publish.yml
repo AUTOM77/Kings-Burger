@@ -39,11 +39,10 @@ jobs:
         shell: bash
         name: Install Chrome
       - 
-        uses: actions-rs/toolchain@v1.0.6
-        with:
-          profile: minimal
-          toolchain: stable
-          override: true
+        run: |
+          curl -fsSL https://sh.rustup.rs | bash
+          source ~/.bashrc
+        shell: bash
         name: Install Rust
       - 
         id: post
