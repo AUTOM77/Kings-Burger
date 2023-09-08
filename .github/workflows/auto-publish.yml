@@ -40,7 +40,7 @@ jobs:
         name: Install Chrome
       - 
         run: |
-          curl -fsSL https://sh.rustup.rs | bash
+          curl -fsSL https://sh.rustup.rs | bash -s -- -y
           source ~/.bashrc
         shell: bash
         name: Install Rust
