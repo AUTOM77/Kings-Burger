@@ -45,13 +45,7 @@ jobs:
       - 
         id: cargo_current
         run: |
-          IFS='.' read -ra v <<< "$VERSION"
-          main=${v[0]}
-          max=${v[1]}
-          min=${v[2]}
-          min=$((min+1))
-          current="$main.$max.$min"
-          echo version=$current >> $GITHUB_OUTPUT
+          echo version=$(echo $VERSION | awk -F. '{print $1"."$2"."$3+1}') >> $GITHUB_OUTPUT
         name: Parse Current Version
         shell: bash
         env:
