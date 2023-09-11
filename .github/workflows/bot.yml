@@ -3,6 +3,7 @@ name: bot
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   CARGO_TERM_COLOR: always
+  CARGO_LOCA: "kingsbur-core/Cargo.toml"
 
 on:
   workflow_call:
@@ -29,7 +30,7 @@ jobs:
       - 
         id: cargo_previous
         run: |
-          previous=$(awk -F ' = ' '$1 ~ /version/ { gsub(/["]/, "", $2); printf("%s",$2) }' core/Cargo.toml)
+          previous=$(awk -F ' = ' '$1 ~ /version/ { gsub(/["]/, "", $2); printf("%s",$2) }' $CARGO_LOCA)
           echo version=$previous >> $GITHUB_OUTPUT
         name: Parse Previous Version
         shell: bash
@@ -53,10 +54,10 @@ jobs:
       - 
         id: cargo_update
         run: |
-          sed -i "s/version = \"$PV\"/version = \"$CV\"/" core/Cargo.toml
+          sed -i "s/version = \"$PV\"/version = \"$CV\"/" $CARGO_LOCA
           git config --global user.email "Bot@AUTOM77.com"
           git config --global user.name "Bot"
-          git add core/Cargo.toml
+          git add $CARGO_LOCA
           git commit -m "auto increment version from [bot]"
           git push
         name: Update Version
