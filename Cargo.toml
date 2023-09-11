@@ -1,6 +1,6 @@
 [workspace]
-members = ["core"]
 resolver = "2"
+members = ["core"]
 
 [profile.dev]
 opt-level = 0
