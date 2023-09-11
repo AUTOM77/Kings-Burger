@@ -1,11 +1,6 @@
 [package]
-<<<<<<< HEAD
-name = "core"
-version = "0.2.2"
-=======
 name = "kingsbur-core"
-version = "0.2.0"
->>>>>>> 9420fc8 (rename core)
+version = "0.2.2"
 edition = "2021"
 
 [dependencies]
