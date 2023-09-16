@@ -1,11 +1,12 @@
 mod engine;
-pub use engine::config::Config;
+use engine::config::Config;
 use regex::Regex;
 use thirtyfour::prelude::*;
+use std::time::Instant;
 
 pub struct Task {
-    pub addr: String,
-    pub value: String,
+    addr: String,
+    value: String,
     config: Config,
 }
 
@@ -32,14 +33,16 @@ impl Task {
     }
 
     pub async fn enter_frame(&self, driver: &WebDriver) -> WebDriverResult<()> {
+        let id = "QR~QID65~6";
         let _ = driver.goto(&self.addr).await?;
         let _ = driver
             .find(By::ClassName(self.config.frame()))
             .await?
             .enter_frame()
             .await?;
-        let x = driver.find(By::Id("QR~QID65~6")).await?;
+        let x = driver.query(By::Id(id)).first().await?;
         x.wait_until().displayed().await?;
+        x.wait_until().enabled().await?;
         x.send_keys(&self.value).await?;
         Ok(())
     }
@@ -65,27 +68,45 @@ impl Task {
         Ok(res.to_owned())
     }
 
-    pub async fn auto(&self) -> WebDriverResult<()> {
+    pub async fn auto(&self) -> WebDriverResult<String> {
         let _chrome = self.embark().await;
         let res = self.trivial(&_chrome).await;
         _chrome.quit().await?;
-        println!("ref={:}", res.unwrap());
-        Ok(())
+        let _ref = res.unwrap();
+        Ok(_ref)
     }
 }
 
-pub async fn run(addr: String, key: String, value: String) -> WebDriverResult<()> {
+pub async fn run(addr: String, key: String, value: String) -> WebDriverResult<String> {
     let _k = key.as_bytes().to_vec();
     // let c = engine::cipher::encode(&addr, &_k);
     // println!("_en_addr={:}", c);
     let _addr = engine::cipher::decode(&addr, &_k);
-    let value = if value.is_empty() { engine::gen_value() } else { value };
-    println!("value={:}", value);
-    let _ = Task::new(_addr, value)
-        .auto()
-        .await;
+    let _value = if value.is_empty() { engine::gen_value() } else { value };
+    let _now = Instant::now();
+    let _ref = Task::new(_addr, _value.clone()).auto().await.unwrap();
+    let _sec = _now.elapsed().as_secs_f64();
+    // let ret = format!("value={_value} ref={_ref} sec={_sec}");
+    let ret = format!("{_value}_{_ref}_{_sec}");
+    Ok(ret)
+}
+
+pub async fn cat(addr: String, key: String, vec: Vec<String>) -> WebDriverResult<()> {
+    let mut handles = Vec::with_capacity(vec.len());
+
+    for value in vec{
+        handles.push(tokio::task::spawn(run(addr.clone(), key.clone(), value)));
+    }
+
+    let mut results = Vec::with_capacity(handles.len());
+    for handle in handles {
+        results.push(handle.await.unwrap().unwrap());
+    }
+    let _ret = results.join("|");
+    print!("ret={_ret:?}");
     Ok(())
 }
+
 
 pub async fn click_shadow(driver: &WebDriver, id: &str) -> WebDriverResult<()> {
     let x = driver.query(By::Id(id)).first().await?;

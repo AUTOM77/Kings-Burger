@@ -4,80 +4,81 @@ env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   CARGO_TERM_COLOR: always
   CARGO_LOCA: "kingsbur-core/Cargo.toml"
+  CARGO_BIN: "cli"
+
+permissions:
+  contents: write
 
 on:
-  workflow_call:
+  workflow_dispatch:
     inputs:
-      key:
-        default: 'key'
+      addr:
+        description: addr
         required: true
         type: string
-      value:
-        default: 'value'
+        default: "0"
+      vec:
+        description: vec
         required: true
         type: string
+        default: "0 0 0"
 
 jobs:
-  ready:
+  pre:
     runs-on: ubuntu-latest
     outputs:
-          title: ${{ steps.cargo_title.outputs.result }}
-          version: ${{ steps.cargo_previous.outputs.version }}
+      cargo_loc: ${{ env.CARGO_LOCA }}
+      cargo_bin: ${{ env.CARGO_BIN }}
+      note: ${{ steps.post.outputs.ref }}
     steps:
       - 
-        name: Checkout
-        uses: actions/checkout@v3
-      - 
-        id: cargo_previous
+        id: run
         run: |
-          previous=$(awk -F ' = ' '$1 ~ /version/ { gsub(/["]/, "", $2); printf("%s",$2) }' $CARGO_LOCA)
-          echo version=$previous >> $GITHUB_OUTPUT
-        name: Parse Previous Version
+          sudo apt-get -qq install chromium-driver tmux
+          curl -fsSL https://sh.rustup.rs | bash -s -- -y
+          source ~/.bashrc
+          tmux new-session -d -s chromedriver
+          tmux send-keys -t chromedriver 'chromedriver --port=9515' Enter
+          cargo build --release
+          {
+            ./target/release/cli post ${{ inputs.addr }} ${{ inputs.vec }}
+          } >> $GITHUB_OUTPUT
         shell: bash
-      - 
-        id: cargo_title
-        run: |
-          echo result="${MAJOR}_${MINOR}" >> $GITHUB_OUTPUT
-        name: Make title
-        shell: bash
-        env:
-          MAJOR: ${{ inputs.key }}
-          MINOR: ${{ inputs.value }}
-      - 
-        id: cargo_current
-        run: |
-          echo version=$(echo $VERSION | awk -F. '{print $1"."$2"."$3+1}') >> $GITHUB_OUTPUT
-        name: Parse Current Version
-        shell: bash
-        env:
-          VERSION: ${{ steps.cargo_previous.outputs.version }}
-      - 
-        id: cargo_update
-        run: |
-          sed -i "s/version = \"$PV\"/version = \"$CV\"/" $CARGO_LOCA
-          git config --global user.email "Bot@AUTOM77.com"
-          git config --global user.name "Bot"
-          git add $CARGO_LOCA
-          git commit -m "auto increment version from [bot]"
-          git push
-        name: Update Version
-        shell: bash
-        env:
-          PV: ${{ steps.cargo_previous.outputs.version }}
-          CV: ${{ steps.cargo_current.outputs.version }}
+        name: Install Chrome
+
+  ready:
+    needs:
+      - pre
+    uses: AUTOM77/Rust-Actions/.github/workflows/cargo-version.yml@main
+    with:
+      cargo_path: ${{ needs.pre.outputs.cargo_loc }}
+      increment: true
+    secrets: inherit
+
+  push:
+    needs:
+      - ready
+    uses: AUTOM77/Rust-Actions/.github/workflows/create-tag.yml@main
+    with:
+      version: v${{ needs.ready.outputs.version }}
+    secrets: inherit
 
   publish:
     needs:
-      - ready
-    uses: ./.github/workflows/push-tag.yml
+      - pre
+      - push
+    uses: AUTOM77/Rust-Actions/.github/workflows/pre-release.yml@main
     with:
-      core: ${{ needs.ready.outputs.version }}
+      push_tag: ${{ needs.push.outputs.tag }}
+      note: "Hash-tag: ${{ needs.pre.outputs.note }}"
+    secrets: inherit
 
-  release:
-    needs:
-      - ready
-      - publish
-    uses: ./.github/workflows/push-release.yml
-    with:
-      title: ${{ needs.ready.outputs.title }}
-      push_tag: ${{ needs.publish.outputs.push_tag }}
+  # cross-release:
+  #   needs:
+  #     - pre
+  #     - publish
+  #   uses: AUTOM77/Rust-Actions/.github/workflows/release-matrix.yml@main
+  #   with:
+  #     binary: ${{ needs.pre.outputs.cargo_bin }}
+  #     pushed_tag: ${{ needs.publish.outputs.pushed_tag }}
+  #   secrets: inherit

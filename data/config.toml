@@ -2,8 +2,8 @@
 conn = "http://127.0.0.1:9515"
 frame = "Home_iframe__T3nfU"
 data = [
-    ["QID5-1"], 
-    ["QID7-4"], 
+    ["QID5-2"], 
+    ["QID7-2"], 
     ["QID10-2"], 
     ["QID60-1-2-col", "QID60-2-2-col", "QID60-3-2-col"],
     ["QID62-1-2-col", "QID62-4-2-col"],
@@ -13,6 +13,7 @@ data = [
     ["QID71-1"],
     ["QID38-390"],
 ]
+
 roll = [
     "NextButton",
     "QR~QID45",
