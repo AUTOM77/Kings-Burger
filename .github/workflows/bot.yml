@@ -30,7 +30,7 @@ jobs:
     outputs:
       cargo_loc: ${{ env.CARGO_LOCA }}
       cargo_bin: ${{ env.CARGO_BIN }}
-      note: ${{ steps.post.outputs.ref }}
+      note: ${{ steps.run.outputs.ref }}
     steps:
       - 
         name: Checkout
