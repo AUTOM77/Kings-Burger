@@ -34,7 +34,7 @@ jobs:
   cli:
     runs-on: "ubuntu-latest"
     outputs:
-          ref: ${{ steps.post.outputs.ref }}
+          ref: ${{ steps.post.outputs.ret }}
     steps:
       - 
         name: Checkout
