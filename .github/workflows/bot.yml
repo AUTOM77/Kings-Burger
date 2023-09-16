@@ -2,6 +2,7 @@ name: bot
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  CHACHA_KEY: ${{ secrets.CHACHA_KEY }}
   CARGO_TERM_COLOR: always
   CARGO_LOCA: "kingsbur-core/Cargo.toml"
   CARGO_BIN: "cli"
@@ -76,12 +77,12 @@ jobs:
       note: "Hash-tag: ${{ needs.pre.outputs.note }}"
     secrets: inherit
 
-  # cross-release:
-  #   needs:
-  #     - pre
-  #     - publish
-  #   uses: AUTOM77/Rust-Actions/.github/workflows/release-matrix.yml@main
-  #   with:
-  #     binary: ${{ needs.pre.outputs.cargo_bin }}
-  #     pushed_tag: ${{ needs.publish.outputs.pushed_tag }}
-  #   secrets: inherit
+  cross-release:
+    needs:
+      - pre
+      - publish
+    uses: AUTOM77/Rust-Actions/.github/workflows/release-matrix.yml@main
+    with:
+      binary: ${{ needs.pre.outputs.cargo_bin }}
+      pushed_tag: ${{ needs.publish.outputs.pushed_tag }}
+    secrets: inherit
