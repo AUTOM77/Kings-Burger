@@ -1,9 +1,10 @@
-name: auto-publish
+name: run publish
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   CHACHA_KEY: ${{ secrets.CHACHA_KEY }}
-  CARGO_TERM_COLOR: always
+  CARGO_LOCA: "kingsbur-core/Cargo.toml"
+  CARGO_BIN: "cli"
 
 permissions:
   contents: write
@@ -16,19 +17,24 @@ on:
         required: true
         type: string
         default: "0"
-      core:
-        description: core
+      vec:
+        description: vec
         required: true
-        type: number
-        default: 0
+        type: string
+        default: "0 0 0"
 
 jobs:
+  pre:
+    runs-on: ubuntu-latest
+    outputs:
+      cargo_loc: ${{ env.CARGO_LOCA }}
+      cargo_bin: ${{ env.CARGO_BIN }}
+    steps:
+      - run: echo "Bypass Restriction"
   cli:
     runs-on: "ubuntu-latest"
     outputs:
-          value: ${{ steps.post.outputs.value }}
           ref: ${{ steps.post.outputs.ref }}
-          runtime: ${{ steps.post.outputs.runtime }}
     steps:
       - 
         name: Checkout
@@ -51,15 +57,17 @@ jobs:
           tmux send-keys -t chromedriver 'chromedriver --port=9515' Enter
           cargo build --release
           { 
-            ./target/release/cli post ${{ inputs.addr }} ${{ inputs.core }}
+            ./target/release/cli post ${{ inputs.addr }} ${{ inputs.vec }}
           } >> $GITHUB_OUTPUT
         shell: bash
         name: Build and Run cli
 
   publish:
     needs:
+      - pre
       - cli
     uses: ./.github/workflows/bot.yml
     with:
-      key: ${{ needs.cli.outputs.value }}
-      value: ${{ needs.cli.outputs.ref }}
+      cargo_loc: ${{ needs.pre.outputs.cargo_loc }}
+      cargo_bin: ${{ needs.pre.outputs.cargo_bin }}
+      note: ${{ needs.cli.outputs.ref }}

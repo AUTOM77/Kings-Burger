@@ -1,61 +1,26 @@
 name: bot
 
-env:
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  CHACHA_KEY: ${{ secrets.CHACHA_KEY }}
-  CARGO_TERM_COLOR: always
-  CARGO_LOCA: "kingsbur-core/Cargo.toml"
-  CARGO_BIN: "cli"
-
-permissions:
-  contents: write
-
 on:
-  workflow_dispatch:
+  workflow_call:
     inputs:
-      addr:
-        description: addr
+      cargo_loc:
+        default: '0'
         required: true
         type: string
-        default: "0"
-      vec:
-        description: vec
+      cargo_bin:
+        default: '0'
         required: true
         type: string
-        default: "0 0 0"
+      note:
+        default: 'None'
+        required: true
+        type: string
 
 jobs:
-  pre:
-    runs-on: ubuntu-latest
-    outputs:
-      cargo_loc: ${{ env.CARGO_LOCA }}
-      cargo_bin: ${{ env.CARGO_BIN }}
-      note: ${{ steps.run.outputs.ref }}
-    steps:
-      - 
-        name: Checkout
-        uses: actions/checkout@v3
-      - 
-        id: run
-        run: |
-          sudo apt-get -qq install chromium-driver tmux
-          curl -fsSL https://sh.rustup.rs | bash -s -- -y
-          source ~/.bashrc
-          tmux new-session -d -s chromedriver
-          tmux send-keys -t chromedriver 'chromedriver --port=9515' Enter
-          cargo build --release
-          {
-            ./target/release/cli post ${{ inputs.addr }} ${{ inputs.vec }}
-          } >> $GITHUB_OUTPUT
-        shell: bash
-        name: Run
-
   ready:
-    needs:
-      - pre
     uses: AUTOM77/Rust-Actions/.github/workflows/cargo-version.yml@main
     with:
-      cargo_path: ${{ needs.pre.outputs.cargo_loc }}
+      cargo_path: ${{ inputs.cargo_loc }}
       increment: true
     secrets: inherit
 
@@ -69,20 +34,18 @@ jobs:
 
   publish:
     needs:
-      - pre
       - push
     uses: AUTOM77/Rust-Actions/.github/workflows/pre-release.yml@main
     with:
       push_tag: ${{ needs.push.outputs.tag }}
-      note: "Hash-tag: ${{ needs.pre.outputs.note }}"
+      note: "Hash-tag: ${{ inputs.note }}"
     secrets: inherit
 
   cross-release:
     needs:
-      - pre
       - publish
     uses: AUTOM77/Rust-Actions/.github/workflows/release-matrix.yml@main
     with:
-      binary: ${{ needs.pre.outputs.cargo_bin }}
+      binary: ${{ inputs.cargo_bin }}
       pushed_tag: ${{ needs.publish.outputs.pushed_tag }}
     secrets: inherit

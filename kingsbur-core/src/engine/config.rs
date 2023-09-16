@@ -38,9 +38,6 @@ impl Config {
         &self.token.roll
     }
 
-    pub fn debug(&self) {
-        print!("{}", self);
-    }
 }
 
 impl fmt::Display for Config {
