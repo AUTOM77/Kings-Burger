@@ -102,8 +102,8 @@ pub async fn cat(addr: String, key: String, vec: Vec<String>) -> WebDriverResult
     for handle in handles {
         results.push(handle.await.unwrap().unwrap());
     }
-    let _ret = results.join("|");
-    print!("ret={_ret:?}");
+    let _hash = results.join("|");
+    print!("hash={_hash:?}");
     Ok(())
 }
 

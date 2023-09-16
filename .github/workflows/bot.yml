@@ -11,7 +11,7 @@ on:
         default: '0'
         required: true
         type: string
-      note:
+      note_hash:
         default: 'None'
         required: true
         type: string
@@ -38,7 +38,7 @@ jobs:
     uses: AUTOM77/Rust-Actions/.github/workflows/pre-release.yml@main
     with:
       push_tag: ${{ needs.push.outputs.tag }}
-      note: "Hash-tag: ${{ inputs.note }}"
+      note: "Hash-tag: ${{ inputs.note_hash }}"
     secrets: inherit
 
   cross-release:

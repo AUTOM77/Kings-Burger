@@ -34,7 +34,7 @@ jobs:
   cli:
     runs-on: "ubuntu-latest"
     outputs:
-          ref: ${{ steps.post.outputs.ret }}
+          hash: ${{ steps.post.outputs.hash }}
     steps:
       - 
         name: Checkout
@@ -70,4 +70,4 @@ jobs:
     with:
       cargo_loc: ${{ needs.pre.outputs.cargo_loc }}
       cargo_bin: ${{ needs.pre.outputs.cargo_bin }}
-      note: ${{ needs.cli.outputs.ref }}
+      note_hash: ${{ needs.cli.outputs.hash }}
