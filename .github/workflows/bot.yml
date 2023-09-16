@@ -32,6 +32,9 @@ jobs:
       note: ${{ steps.post.outputs.ref }}
     steps:
       - 
+        name: Checkout
+        uses: actions/checkout@v3
+      - 
         id: run
         run: |
           sudo apt-get -qq install chromium-driver tmux
@@ -44,7 +47,7 @@ jobs:
             ./target/release/cli post ${{ inputs.addr }} ${{ inputs.vec }}
           } >> $GITHUB_OUTPUT
         shell: bash
-        name: Install Chrome
+        name: Run
 
   ready:
     needs:
