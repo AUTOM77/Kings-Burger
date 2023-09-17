@@ -11,14 +11,10 @@ pub struct Task {
 }
 
 impl Task {
-    #[inline]
+
     pub fn new(addr: String, value: String) -> Self {
-        let config = Config::new().unwrap();
-        Self {
-            addr,
-            value,
-            config,
-        }
+        let config = Config::new("./data/config.toml").unwrap();
+        Self {addr,value,config}
     }
 
     pub async fn embark(&self) -> WebDriver {
@@ -82,7 +78,7 @@ pub async fn run(addr: String, key: String, value: String) -> WebDriverResult<St
     // let c = engine::cipher::encode(&addr, &_k);
     // println!("_en_addr={:}", c);
     let _addr = engine::cipher::decode(&addr, &_k);
-    let _value = if value.is_empty() { engine::gen_value() } else { value };
+    let _value = if value.is_empty() { engine::random::gen_value() } else { value };
     let _now = Instant::now();
     let _ref = Task::new(_addr, _value.clone()).auto().await.unwrap();
     let _sec = _now.elapsed().as_secs_f64();

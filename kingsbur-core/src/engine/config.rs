@@ -16,8 +16,8 @@ struct Token {
 }
 
 impl Config {
-    pub fn new() -> Result<Self, toml::de::Error> {
-        let _str = fs::read_to_string("./data/config.toml").expect("Token: error reading file");
+    pub fn new(s: &str) -> Result<Self, toml::de::Error> {
+        let _str = fs::read_to_string(s).expect("Cannot reading file");
         let _conf = toml::from_str(&_str)?;
         Ok(_conf)
     }
@@ -37,7 +37,6 @@ impl Config {
     pub fn get_roll(&self) -> &Vec<String> {
         &self.token.roll
     }
-
 }
 
 impl fmt::Display for Config {
